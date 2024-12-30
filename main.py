@@ -22,28 +22,32 @@ def actual_age():
         return f'Уже {date} лет с вами'
 
 
-wine_from_excel = pd.read_excel('wine3.xlsx', sheet_name='Лист1').fillna('')
-wines_list = wine_from_excel.to_dict(orient='records')
-wines_by_category = defaultdict(list)
+def main():
+    wine_from_excel = pd.read_excel('wine3.xlsx', sheet_name='Лист1').fillna('')
+    wines_list = wine_from_excel.to_dict(orient='records')
+    wines_by_category = defaultdict(list)
 
-for wine in wines_list:
-    category = wine['Категория']
-    wines_by_category[category].append(wine)
+    for wine in wines_list:
+        category = wine['Категория']
+        wines_by_category[category].append(wine)
 
-env = Environment(
-    loader=FileSystemLoader('.'),
-    autoescape=select_autoescape(['html', 'xml'])
-)
+    env = Environment(
+        loader=FileSystemLoader('.'),
+        autoescape=select_autoescape(['html', 'xml'])
+    )
 
-template = env.get_template('template.html')
-rendered_page = template.render(
-    age_of_winery=actual_age(),
-    wines=wines_by_category
-)
+    template = env.get_template('template.html')
+    rendered_page = template.render(
+        age_of_winery=actual_age(),
+        wines=wines_by_category
+    )
 
-with open('index.html', 'w', encoding='utf8') as file:
-    file.write(rendered_page)
+    with open('index.html', 'w', encoding='utf8') as file:
+        file.write(rendered_page)
 
+
+if __name__ == '__main__':
+    main()
 
 server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
 server.serve_forever()
