@@ -117,14 +117,14 @@
           {% for category, wines in wines.items() %}
           <h2>{{ category }}</h2>
           <div class="row">
-              {% for wine in wines %}
+            {% for wine in wines %}
               <div class="col-lg-4 mb-5 col-md-6">
                 <div class="wine_v_1 text-center pb-4 pt-5">
                   {% if wine.Картинка %}
                   <img src="images/{{ wine.Картинка }}" alt="Image" class="img-fluid">
-                      {% if wine.Акция %}
-                      <img src="assets/profitable.png" style="width:10rem;height: 10rem;position:absolute;right: -20px;top: -20px;">
-                      {% endif %}
+                    {% if wine.Акция %}
+                    <img src="assets/profitable.png" style="width:10rem;height: 10rem;position:absolute;right: -20px;top: -20px;">
+                    {% endif %}
                   {% endif %}
                   <div>
                     {% if wine.Название %}
@@ -142,10 +142,10 @@
                 </div>
               </div>
             {% endfor %}
-          </div>  <!-- Закрываем ряд для вин -->
-        {% endfor %}
-      </div>  <!-- Закрываем основной ряд -->
-    </div>  <!-- Закрываем контейнер -->
+          </div>  
+          {% endfor %}
+        </div> 
+    </div>  
   </div>
 
     <div class="hero-2" style="background-image: url('assets/hero_2.jpg');">

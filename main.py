@@ -1,4 +1,5 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+import argparse
 import datetime
 from pprint import pprint
 from collections import defaultdict
@@ -7,8 +8,9 @@ import pandas as pd
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
-def actual_age():
-    date = (datetime.datetime.now()).year - 1920
+def get_actual_age():
+    year_of_foundation = 1920
+    date = (datetime.datetime.now()).year - year_of_foundation
     last_digit = date % 10
     last_two_digit = date % 100
 
@@ -22,12 +24,12 @@ def actual_age():
         return f'Уже {date} лет с вами'
 
 
-def main():
-    wine_from_excel = pd.read_excel('wine3.xlsx', sheet_name='Лист1').fillna('')
-    wines_list = wine_from_excel.to_dict(orient='records')
+def main(file_path):
+    wine_from_excel = pd.read_excel(file_path, sheet_name='Лист1').fillna('')
+    wines = wine_from_excel.to_dict(orient='records')
     wines_by_category = defaultdict(list)
 
-    for wine in wines_list:
+    for wine in wines:
         category = wine['Категория']
         wines_by_category[category].append(wine)
 
@@ -38,7 +40,7 @@ def main():
 
     template = env.get_template('template.html')
     rendered_page = template.render(
-        age_of_winery=actual_age(),
+        age_of_winery=get_actual_age(),
         wines=wines_by_category
     )
 
@@ -47,7 +49,17 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(
+        description='Обработка таблицы с напитками'
+    )
+    parser.add_argument(
+        'file', metavar='F', type=str,
+        nargs='?', default='wine.xlsx',
+        help='Путь к excel файлу (по умолчанию wine.xlsx в текущей папке)'
+    )
+
+    args = parser.parse_args()
+    main(args.file)
 
 server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
 server.serve_forever()
