@@ -47,6 +47,9 @@ def main(file_path):
     with open('index.html', 'w', encoding='utf8') as file:
         file.write(rendered_page)
 
+    server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
+    server.serve_forever()
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -60,6 +63,3 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     main(args.file)
-
-server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
-server.serve_forever()
